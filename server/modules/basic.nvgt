@@ -1,0 +1,53 @@
+#include"sign_up_handler.nvgt"
+#include"sign_in_handler.nvgt"
+#include"sign_out_handler.nvgt"
+#include"chat_handler.nvgt"
+#include"onlines_handler.nvgt"
+#include"url_handler.nvgt"
+//#include"npcs_handler.nvgt"
+
+void packet_handler()
+{
+command= string_split(string_aes_decrypt(n_event.message, encrypt_key), ":", false);
+
+if(command[0]=="sign up")
+{
+def_sign_up();
+}
+
+else if(command[0]=="sign in")
+{
+def_sign_in();
+}
+
+else if(command[0]=="chat")
+{
+def_chat();
+}
+
+else if(command[0]=="get onlines")
+{
+def_get_onlines();
+}
+
+else if(command[0]=="url")
+{
+def_url();
+}
+
+else if(command[0]=="sign out")
+{
+def_sign_out();
+}
+
+else if(command[0]=="ping")
+{
+n.send_unreliable(n_event.peer_id, string_aes_encrypt("pong.", encrypt_key), 1);
+}
+
+else
+{
+speak("command not exists!");
+}
+
+}

@@ -1,0 +1,31 @@
+class hand
+{
+bool activ;
+string item;
+
+void new_hand()
+{
+activ=true;
+item="";
+}
+
+bool is_activ()
+{
+return activ;
+}
+
+string is_item()
+{
+return item;
+}
+
+void set_activ(bool activ_mode)
+{
+activ=activ_mode;
+}
+
+void set_item(string item_name)
+{
+item= item_name;
+}
+}

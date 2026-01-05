@@ -1,0 +1,64 @@
+#include "speech.nvgt"
+
+timer t;
+
+void main()
+{
+show_window("Runtime Timer");
+
+while(!key_pressed(KEY_ESCAPE))
+{
+wait(5);
+
+int64 ms = t.elapsed;
+
+int seconds = (ms / 1000) % 60;
+int minutes = (ms / (1000 * 60)) % 60;
+int hours= (ms / (1000 * 60 * 60)) % 24;
+int days= (ms / (1000 * 60 * 60 * 24)) % 30;
+int months= (ms / (1000 * 60 * 60 * 24 * 30)) % 12;
+int years= ms / (1000 * 60 * 60 * 24 * 365);
+
+if(key_pressed(KEY_RETURN))
+{
+string msg = "";
+
+if(years>0)
+{
+msg= years+ "years, "+ months+ "months, "+ days+ "days, "+ hours+ "hours, "+ minutes+ "minutes and "+ seconds+ "seconds.";
+}
+
+else if(months>0)
+{
+msg= months+ "months, "+ days+ "days, "+ hours+ "hours, "+ minutes+ "minutes and "+ seconds+ "seconds.";
+}
+
+else if(days>0)
+{
+msg= days+ "days, "+ hours+ "hours, "+ minutes+ "minutes and "+ seconds+ "seconds.";
+}
+
+else if(hours>0)
+{
+msg= hours+ "hours, "+ minutes+ "minutes and "+ seconds+ "seconds.";
+}
+
+else if(minutes>0)
+{
+msg= minutes+ "minutes and "+ seconds+ "seconds.";
+}
+
+else if(seconds>0)
+{
+msg= seconds+ "seconds.";
+}
+
+else
+{
+msg= "starting time...";
+}
+
+speak(msg);
+}
+}
+}

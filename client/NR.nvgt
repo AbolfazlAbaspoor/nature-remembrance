@@ -1,0 +1,87 @@
+//https://github.com/samtupy/nvgt/releases/download/fallback/nvgt_0.90.0_dev.exe
+#include"speech.nvgt"
+#include "file_contents.nvgt"
+#include "instance.nvgt"
+#include"settings.nvgt"
+#include "touch.nvgt"
+#include "form.nvgt"
+
+#include"modules/connection.nvgt"
+#include"modules/data.nvgt"
+#include"modules/game.nvgt"
+#include"modules/rotation.nvgt"
+#include "modules/map.nvgt"
+#include "modules/tile.nvgt"
+#include "modules/zone.nvgt"
+#include"modules/npcs.nvgt"
+#include"modules/touch_handler.nvgt"
+#include "modules/menu.nvgt"
+#include"modules/menus.nvgt"
+#include "modules/screen_handler.nvgt"
+#include "modules/buffer.nvgt"
+#include "modules/hand.nvgt"
+
+enum screens
+{
+main_menu=0,
+connect=1,
+sign_up=2,
+sign_in=3,
+settings_menu=4,
+game_start=5,
+about=6,
+developer_menu=7,
+connection_menu=8,
+audio_menu=9,
+output_menu=10,
+input_menu=11,
+screen_reader_menu=12,
+exit_game=13
+}
+network n;
+network_event n_event;
+audio_form f;
+instance inst;
+sound_environment env;
+sound@ s;
+mixer m;
+Map gm;
+NPC player;
+touch_gesture_manager touch;
+BufferManager bm;
+
+int screen= connect;
+string host= "185.221.239.149";
+//string host="127.0.0.1";
+int port=21000;
+string encrypt_key="1234";
+bool connected;
+int update_port=21001;
+string version= "0.0.3";
+string name="";
+string password="";
+bool is_developer;
+bool running_as;
+string[]@ output_devices= get_sound_output_devices();
+string[]@ input_devices= get_sound_input_devices();
+
+
+touch_gesture_manager@ manager = touch_gesture_manager();
+
+void main()
+{
+def_load_data();
+if(inst.is_already_running)
+{
+speak("You can't run this app twice.");
+exit();
+}
+
+f.create_window("Nature Remembrance");
+timer speak_escape;
+while(!key_pressed(KEY_ESCAPE))
+{
+wait(5);
+check_screen();
+}
+}

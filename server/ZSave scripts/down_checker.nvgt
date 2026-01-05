@@ -1,0 +1,54 @@
+#include"speech.nvgt"
+
+network n;
+network_event n_event;
+
+void main()
+{
+show_window("checker!");
+
+while(true)
+{
+if(n.setup_client(1, 1) == false)
+{
+disconnect();
+}
+
+else if(n.connect("127.0.0.1", 21000) == 0)
+{
+disconnect();
+}
+
+while(true)
+{
+wait(5);
+n_event = n.request(0);
+
+if(n_event.type == event_connect)
+{
+disconnect();
+wait(1000);
+break;
+}
+
+else if(n_event.type == event_disconnect)
+{
+disconnect();
+if(!run("server.exe", "", false, false))
+{
+if(!run("C:/nvgt/nvgtw.exe", "server.nvgt", false, false))
+{
+speak("error! server could not be run.");
+}
+}
+break;
+}
+}
+}
+}
+
+void disconnect()
+{
+n.destroy();
+}
+

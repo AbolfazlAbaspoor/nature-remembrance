@@ -1,0 +1,85 @@
+#include"speech.nvgt"
+
+class being
+{
+string name;
+int health;
+timer healer;
+int default_health=10;
+int max_health=20;
+vector position;
+
+
+void setup_default()
+{
+name="test";
+health=1000;
+position= vector(5, 5, 0);
+}
+
+void setup(string n_name, int n_health, vector n_position)
+{
+name=n_name;
+health=n_health;
+position=n_position;
+}
+
+void health_handler()
+{
+if(health<1)
+{
+speak(name+ " has died!");
+health=1;
+}
+
+else if(healer.elapsed>1000 and health<default_health)
+{
+healer.restart();
+health++;
+}
+
+else if(healer.elapsed>100 and health<max_health and key_pressed(KEY_RETURN))
+{
+healer.restart();
+health++;
+}
+
+else if(health>max_health)
+{
+health=max_health;
+}
+}
+
+void handler()
+{
+health_handler();
+}
+}
+
+being b;
+
+void main()
+{
+b.setup("abolfazl", 1, vector(3, 3, 0));
+show_window("test");
+while(!key_pressed(KEY_ESCAPE))
+{
+b.handler();
+if(key_pressed(KEY_F1))
+{
+speak(b.name);
+}
+
+else if(key_pressed(KEY_H))
+{
+speak(b.health);
+}
+
+else if(key_pressed(KEY_C))
+{
+speak(b.position.x+ ", "+ b.position.y+ ", "+ b.position.z);
+}
+
+wait(5);
+}
+}

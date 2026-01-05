@@ -1,0 +1,69 @@
+void check_screen()
+{
+if(screen == main_menu)
+{
+def_main_menu();
+}
+else if(screen == connect)
+{
+def_connect();
+}
+else if(screen == sign_up)
+{
+def_sign_up();
+}
+else if(screen == sign_in)
+{
+def_sign_in();
+}
+else if(screen == settings_menu)
+{
+def_settings_menu();
+}
+
+else if(screen == game_start)
+{
+def_game_start();
+}
+
+else if(screen == about)
+{
+def_about_menu();
+}
+
+else if(screen == developer_menu)
+{
+def_developer_menu();
+}
+
+else if(screen==connection_menu)
+{
+def_connection_menu();
+}
+
+else if(screen==audio_menu)
+{
+def_audio_menu();
+}
+
+else if(screen==output_menu)
+{
+def_output_menu();
+}
+
+else if(screen==input_menu)
+{
+def_input_menu();
+}
+
+else if(screen==screen_reader_menu)
+{
+def_screen_reader_menu();
+}
+
+else if(screen == exit_game)
+{
+def_save_data();
+exit();
+}
+}

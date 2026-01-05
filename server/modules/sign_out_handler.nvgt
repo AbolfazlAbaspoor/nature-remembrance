@@ -1,0 +1,18 @@
+void def_sign_out()
+{
+
+if(online_users.exists(string(n_event.peer_id)))
+{
+string username;
+online_users.get(string(n_event.peer_id), username);
+
+string msg = "sign out:" + username;
+
+online_users.delete(string(n_event.peer_id));
+
+if(online_users.get_keys().length()!=0)
+{
+n.send_reliable(0, string_aes_encrypt(msg, encrypt_key), 0);
+}
+}
+}

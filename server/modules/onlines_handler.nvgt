@@ -1,0 +1,23 @@
+void def_get_onlines()
+{
+string[] keys= online_users.get_keys();
+
+if(keys.length()==0)
+{
+speak("No users online.");
+return;
+}
+
+string msg= "online users";
+
+for(int i=0; i<keys.length(); i++)
+{
+string username;
+online_users.get(keys[i], username);
+msg+=":"+username;
+}
+
+//speak(msg);
+n.send_reliable(n_event.peer_id, string_aes_encrypt(msg, encrypt_key), 0);
+
+}

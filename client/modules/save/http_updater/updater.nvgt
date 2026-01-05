@@ -1,0 +1,87 @@
+#include "size.nvgt"
+#include "speech.nvgt"
+
+void main()
+{
+http h;
+
+string host= "185.221.239.149";
+string port= "21001";
+string version= "0.0.3";
+
+if(!h.get("http://"+ host+ ":"+ port+ "/version.txt"))
+{
+speak("checking version failed!");
+return;
+}
+h.wait();
+
+string last_version= h.response_body;
+
+if(h.status_code==0)
+{
+speak("updater server's is not online!");
+}
+else if(h.status_code==404)
+{
+speak("latest version is hide! pleas retry.");
+}
+else if(h.status_code==200)
+{
+if(last_version==version)
+{
+speak("no update is available!");
+}
+else
+{
+int update_question= question("new version is available!", "ready for update?");
+
+if(update_question==1)
+{
+h.get("http://"+ host+ ":"+ port+ "/NatureRemembrance_"+ last_version+ ".zip");
+file f;
+string filename = "";
+show_window("downloading...");
+while (!h.complete)
+{
+wait(5);
+if (key_pressed(KEY_ESCAPE))
+{
+f.close();
+file_delete(filename);
+return; // Destruction of the http object will cancel any requests in progress.
+}
+if (!f.active and h.status_code == 200)
+{
+string[]@ path = h.url.get_path_segments();
+filename = path.length() > 0? path[-1] : "http.txt";
+f.open(filename, "wb");
+}
+if (f.active)
+{
+f.write(h.response_body);
+}
+if (key_pressed(KEY_SPACE))
+{
+speak(round(h.progress * 100, 2) + "%");
+}
+}
+f.close();
+
+if(run("7z.exe", "x \""+ filename+ "\" -aoa -o\".\" ", true, true))
+{
+file_delete(filename);
+}
+else
+{
+alert("failed", "failed to un zip update!");
+}
+
+}
+}
+}
+else
+{
+speak("error! "+ h.status_code);
+}
+}

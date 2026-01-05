@@ -1,0 +1,13 @@
+name=CentralForest
+minx=0
+maxx=5
+miny=0
+maxy=5
+minz=-20
+maxz=20
+tile=0=4=0=4=0=0=wood
+zone=0=3=0=3=0=10=Central forest
+tile=0=4=0=4=-5=-5=wood
+tile=0=4=0=4=-10=-10=wood
+tile=0=4=0=4=-15=-15=wood
+tile=0=4=0=4=5=5=wood

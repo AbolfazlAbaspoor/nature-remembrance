@@ -1,0 +1,62 @@
+#include"speech.nvgt"
+#include "file_contents.nvgt"
+#include "bgt_compat.nvgt"
+
+#include"modules/basic.nvgt"
+
+enum ranks
+{
+disable=0,
+normal=1,
+builder=2,
+admin=3,
+developer=4,
+}
+network n;
+network_event n_event;
+sound@ s;
+
+dictionary online_users;
+
+timer up_time;
+string encrypt_key="1234";
+string last_url;
+string username;
+string[] command;
+
+void main()
+{
+show_window("server");
+
+if(n.setup_server(21000, 10, 100))
+{
+speak("starting server...");
+
+while(true)
+{
+wait(10);
+n_event = n.request(0);
+
+if(n_event.type == event_receive)
+{
+packet_handler();
+}
+
+else if(n_event.type == event_disconnect)
+{
+def_sign_out();
+}
+
+else if(key_pressed(KEY_RETURN))
+{
+speak("exitting...");
+exit();
+}
+
+} 
+}
+else
+{
+alert("Error", "Could not start server.");
+}
+}

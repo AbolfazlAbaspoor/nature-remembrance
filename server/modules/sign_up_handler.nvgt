@@ -1,0 +1,21 @@
+void def_sign_up()
+{
+if(directory_exists("users"))
+{
+directory_create("users");
+}
+
+if(directory_exists("users/"+command[1]))
+{
+n.send_reliable(n_event.peer_id, string_encrypt("This username is already taken.", encrypt_key), 0);
+}
+
+else
+{
+directory_create("users/"+ command[1]);
+put_file_contents("users/"+ command[1]+ "/password.usr", string_encrypt(command[2], encrypt_key), false);
+put_file_contents("users/"+ command[1]+ "/items.usr", string_encrypt("nature_pack=1\n", encrypt_key), false);
+put_file_contents("users/"+ command[1]+ "/chats.usr", string_aes_encrypt("", encrypt_key), false);
+n.send_reliable(n_event.peer_id, string_encrypt("Created successfully.", encrypt_key), 0);
+}
+}

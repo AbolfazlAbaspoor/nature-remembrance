@@ -1,0 +1,45 @@
+void def_sign_in()
+{
+// بررسی وجود پوشه‌ی users
+if(!directory_exists("users/"))
+{
+n.send_reliable(n_event.peer_id, string_aes_encrypt("This user not exists.", encrypt_key), 0);
+return;
+}
+
+// بررسی وجود پوشه‌ی کاربر
+if(!directory_exists("users/" + command[1]))
+{
+n.send_reliable(n_event.peer_id, string_aes_encrypt("This user not exists.", encrypt_key), 0);
+return;
+}
+
+// بررسی رمز عبور
+string stored_pass = string_aes_decrypt(get_file_contents("users/" + command[1] + "/password.usr"), encrypt_key);
+if(stored_pass != command[2])
+{
+n.send_reliable(n_event.peer_id, string_aes_encrypt("The password is wrong.", encrypt_key), 0);
+return;
+}
+
+// اگر همه چیز درست بود
+n.send_reliable(n_event.peer_id, string_aes_encrypt("You can login.", encrypt_key), 0);
+
+// اطلاع‌رسانی به همه که کاربر وارد شد
+n.send_reliable(0, string_aes_encrypt("sign in:" + command[1] + " has signed in to server!", encrypt_key), 0);
+
+//send last url.
+if(last_url!="")
+{
+n.send_reliable(n_event.peer_id, string_aes_encrypt("url:"+ username+ ":"+ last_url, encrypt_key), 0);
+}
+
+// ذخیره‌ی کاربر در لیست آنلاین‌ها
+// کلید: peer_id (به صورت string)، مقدار: username
+online_users.set(string(n_event.peer_id), command[1]);
+
+//ارسال نقشه ای که آخرین بار بازی کن در آن حضور داشته است.
+n.send_reliable(n_event.peer_id, string_aes_encrypt("your last map:"+ get_file_contents("maps/central forest.map"), encrypt_key), 0);
+n.send_reliable(n_event.peer_id, string_aes_encrypt("your last x y z:0:0:0", encrypt_key), 0);
+
+}

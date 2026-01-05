@@ -1,0 +1,18 @@
+void def_menu_touch()
+{
+touch_gesture_manager touch;
+show_window("touch swipe test");
+
+dictionary@ map=
+{
+{"swipe_up1f", KEY_UP},
+{"swipe_down1f", KEY_DOWN},
+{"swipe_left1f", KEY_LEFT},
+{"swipe_right1f", KEY_RIGHT},
+{"double_tap1f",  KEY_RETURN},
+{"double_tap2f",  KEY_ESCAPE}
+};
+
+touch_keyboard_interface tki(touch, map);
+touch.add_touch_interface(tki);
+}

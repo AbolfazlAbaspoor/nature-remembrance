@@ -1,0 +1,304 @@
+void def_connect()
+{
+if(n.setup_client(1, 1) == false)
+{
+speak("connection could not be set up, pleas try again.");
+def_disconnect();
+}
+else if(n.connect(host, port) == 0)
+{
+speak("could not initiate connection.");
+def_disconnect();
+}
+
+speak("Connecting to server...");
+
+while(true)
+{
+wait(5);
+n_event = n.request(0);
+
+if(n_event.type == event_connect)
+{
+speak("Connected to server!");
+connected = true;
+screen = main_menu;
+break;
+}
+else if(n_event.type == event_disconnect)
+{
+speak("connection failed.");
+def_disconnect();
+break;
+}
+else if(key_pressed(KEY_UP) or key_pressed(KEY_DOWN) or key_pressed(KEY_RIGHT) or key_pressed(KEY_LEFT) or key_pressed(KEY_RETURN))
+{
+speak("connecting...");
+}
+else if(key_pressed(KEY_ESCAPE))
+{
+def_disconnect();
+break;
+}
+}
+}
+
+void def_disconnect()
+{
+n.destroy();
+connected = false;
+screen = main_menu;
+}
+
+void def_sign_up()
+{
+f.reset();
+f.create_window("");
+
+int f_name = f.create_input_box("name", "", "", 32, false, false, false);
+int f_password = f.create_input_box("password", "", "", 32, false, false, false);
+int f_hide_password= f.create_checkbox("hide password", true, false);
+int f_sign_up = f.create_button("sign up");
+
+f.focus(f_name);
+
+while(true)
+{
+wait(5);
+f.monitor();
+
+if(key_pressed(KEY_ESCAPE))
+{
+f.reset();
+f.create_window("");
+screen = settings_menu;
+return;
+}
+
+else if(f.is_pressed(f_sign_up))
+{
+n.send_reliable(1, string_aes_encrypt("sign up:" + f.get_text(f_name) + ":" + f.get_text(f_password), encrypt_key), 0);
+
+while(true)
+{
+wait(5);
+n_event = n.request(0);
+
+if(key_pressed(KEY_ESCAPE))
+{
+f.reset();
+f.create_window("");
+def_disconnect();
+return;
+}
+else if(n_event.type == event_receive)
+{
+string content = string_aes_decrypt(n_event.message, encrypt_key);
+speak(content);
+
+if(content == "Created successfully.")
+{
+name = f.get_text(f_name);
+password = f.get_text(f_password);
+def_save_data();
+screen = game_start;
+f.reset();
+f.create_window("");
+return;
+}
+else
+{
+screen = main_menu;
+}
+f.reset();
+f.create_window("");
+return;
+}
+else if(n_event.type == event_disconnect)
+{
+speak("Disconnected.");
+def_disconnect();
+return;
+}
+}
+}
+else if(f.is_checked(f_hide_password))
+{
+f.set_mask(f_password, "/");
+}
+
+else if(!f.is_checked(f_hide_password))
+{
+f.set_mask(f_password, "");
+}
+}
+}
+
+void def_sign_in()
+{
+if(running_as)
+{
+// --- حالت auto login ---
+if(name.length() < 4)
+{
+speak("Name length is too short.");
+screen = main_menu;
+}
+else if(password.length() < 8)
+{
+speak("Password length is too short.");
+screen = main_menu;
+}
+else
+{
+n.send_reliable(1, string_aes_encrypt("sign in:" + name + ":" + password, encrypt_key), 0);
+
+while(true)
+{
+n_event = n.request(0);
+wait(5);
+
+if(key_pressed(KEY_ESCAPE))
+{
+def_disconnect();
+screen = main_menu;
+break;
+}
+else if(n_event.type == event_receive)
+{
+string content = string_aes_decrypt(n_event.message, encrypt_key);
+speak(content);
+
+if(content == "You can login.")
+{
+screen = game_start;
+;
+break;
+}
+else
+{
+screen = main_menu;
+;
+break;
+}
+}
+else if(n_event.type == event_disconnect)
+{
+speak("Connection failed.");
+def_disconnect();
+screen = main_menu;
+;
+break;
+}
+} // end while(true) auto login
+} // end else (name/password lengths ok)
+} // end if(running_as)
+
+else
+{
+f.reset();
+f.create_window("");
+
+int f_name = f.create_input_box("name", "", "", 32, false, false, false);
+int f_password = f.create_input_box("password", "", "", 32, false, false, false);
+int f_hide_password= f.create_checkbox("hide password", true, false);
+int f_sign_in = f.create_button("sign in");
+
+f.focus(f_name);
+
+while(true)
+{
+wait(5);
+f.monitor();
+
+if(key_pressed(KEY_ESCAPE))
+{
+f.reset();
+f.create_window("");
+screen = main_menu;
+;
+return; // فرم بسته شود
+}
+else if(f.is_pressed(f_sign_in))
+{
+if(f.get_text(f_name).length() < 4)
+{
+speak("Name length is too short.");
+}
+else if(f.get_text(f_password).length() < 8)
+{
+speak("Password length is too short.");
+}
+else
+{
+n.send_reliable(1, string_aes_encrypt(
+"sign in:" + f.get_text(f_name) + ":" + f.get_text(f_password), encrypt_key), 0);
+
+while(true)
+{
+wait(5);
+n_event = n.request(0);
+
+if(key_pressed(KEY_ESCAPE))
+{
+f.reset();
+f.create_window("");
+def_disconnect();
+screen = connection_menu;
+;
+return;
+}
+else if(n_event.type == event_receive)
+{
+string content = string_aes_decrypt(n_event.message, encrypt_key);
+speak(content);
+
+if(content == "You can login.")
+{
+name = f.get_text(f_name);
+password = f.get_text(f_password);
+
+f.reset();
+f.create_window("");
+
+def_save_data();
+screen = game_start;
+;
+return;
+}
+else
+{
+f.reset();
+f.create_window("");
+
+screen = connection_menu;
+;
+return;
+}
+}
+else if(n_event.type == event_disconnect)
+{
+speak("Disconnected.");
+f.reset();
+f.create_window("");
+
+def_disconnect();
+screen = connection_menu;
+;
+return;
+}
+}// end inner while(receive)
+} // end else (name/password ok)
+} // end if(button pressed)
+else if(f.is_checked(f_hide_password))
+{
+f.set_mask(f_password, "/");
+}
+
+else if(!f.is_checked(f_hide_password))
+{
+f.set_mask(f_password, "");
+}
+} // end while(form)
+} // end else (running_as == false)
+} // end def_sign_in

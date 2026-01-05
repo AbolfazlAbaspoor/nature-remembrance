@@ -1,0 +1,130 @@
+class NPC
+{
+//float x, y, z;
+
+double facing, x, y, z;
+
+// سازنده‌ی پیش‌فرض
+NPC()
+{
+x = y = z = 0.0;
+facing = 0.0;
+}
+
+// سازنده‌ی پارامتردار
+NPC(float nx, float ny, float nz, double dir = 0.0)
+{
+x = nx;
+y = ny;
+z = nz;
+facing = dir;
+}
+
+// گرفتن مختصات
+float get_x() { return x; }
+float get_y() { return y; }
+float get_z() { return z; }
+
+// تغییر موقعیت (نسخه‌ی عمومی)
+// تغییر موقعیت (با رُند کردن برای جلوگیری از خطای اعشاری)
+void set_position(float nx, float ny, float nz)
+{
+// رُند به سه رقم اعشار
+x = floor(nx * 1000 + 0.5) / 1000.0;
+y = floor(ny * 1000 + 0.5) / 1000.0;
+z = floor(nz * 1000 + 0.5) / 1000.0;
+}
+
+// گرفتن زاویه
+double get_facing() { return facing; }
+
+// تغییر زاویه
+void set_facing(double dir)
+{
+facing = degree_limit(dir);
+}
+
+// گرفتن جهت به صورت متن
+string get_direct_string(bool more_detail = true)
+{
+return dir_to_string(int(facing), more_detail);
+}
+
+// حرکت در راستای z مثبت
+void walk_up(double step = 1.0)
+{
+vector current(x, y, z);
+vector target = vector(x, y, z + 1);
+vector delta = target - current;
+delta *= step;
+vector newpos = current + delta;
+set_position(newpos.x, newpos.y, newpos.z);
+}
+
+// حرکت در راستای z منفی
+void walk_down(double step = 1.0)
+{
+vector current(x, y, z);
+vector target = vector(x, y, z - 1);
+vector delta = target - current;
+delta *= step;
+vector newpos = current + delta;
+set_position(newpos.x, newpos.y, newpos.z);
+}
+
+// حرکت به جلو
+void walk_front(double step = 1.0)
+{
+vector current(x, y, z);
+vector target = move(x, y, z, facing, 0);
+vector delta = target - current;
+delta *= step;
+vector newpos = current + delta;
+set_position(newpos.x, newpos.y, newpos.z);
+}
+
+// حرکت به عقب
+void walk_back(double step = 1.0)
+{
+vector current(x, y, z);
+vector target = move(x, y, z, facing, 180);
+vector delta = target - current;
+delta *= step;
+vector newpos = current + delta;
+set_position(newpos.x, newpos.y, newpos.z);
+}
+
+// حرکت به چپ
+void walk_left(double step = 1.0)
+{
+vector current(x, y, z);
+vector target = move(x, y, z, facing, 270);
+vector delta = target - current;
+delta *= step;
+vector newpos = current + delta;
+set_position(newpos.x, newpos.y, newpos.z);
+}
+
+// حرکت به راست
+void walk_right(double step = 1.0)
+{
+vector current(x, y, z);
+vector target = move(x, y, z, facing, 90);
+vector delta = target - current;
+delta *= step;
+vector newpos = current + delta;
+set_position(newpos.x, newpos.y, newpos.z);
+}
+
+// چرخش به چپ
+void turn_left(double inc = 5)
+{
+facing = turnleft(facing, inc);
+}
+
+// چرخش به راست
+void turn_right(double inc = 5)
+{
+facing = turnright(facing, inc);
+}
+}

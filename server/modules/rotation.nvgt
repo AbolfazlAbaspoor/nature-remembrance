@@ -1,0 +1,135 @@
+int direct = 0;
+float x = 0;
+float y = 0;
+float z = 0;
+float PI = 3.141592653589793;
+
+string get_direct_string()
+{
+int d = direct % 360;
+
+if(d == 0) return "North"+ string(direct);
+else if(d == 45) return "North East"+ string(direct);
+else if(d == 90) return "East"+ string(direct);
+else if(d == 135) return "South East"+ string(direct);
+else if(d == 180) return "South"+ string(direct);
+else if(d == 225) return "South West"+ string(direct);
+else if(d == 270) return "West"+ string(direct);
+else if(d == 315) return "North West"+ string(direct);
+else
+{
+if(d > 0 && d < 45) return "North-North East"+ string(direct);
+else if(d > 45 && d < 90) return "East-North East"+ string(direct);
+else if(d > 90 && d < 135) return "East-South East"+ string(direct);
+else if(d > 135 && d < 180) return "South-South East"+ string(direct);
+else if(d > 180 && d < 225) return "South-South West"+ string(direct);
+else if(d > 225 && d < 270) return "West-South West"+ string(direct);
+else if(d > 270 && d < 315) return "West-North West"+ string(direct);
+else if(d > 315 && d < 360) return "North-North West"+ string(direct);
+}
+return "Unknown"+ string(direct);
+}
+
+int get_x() {return x;}
+int get_y() {return y;}
+int get_z() {return z;}
+
+void direct_handler()
+{
+if(direct > 359)
+direct = 0;
+else if(direct < 0)
+direct += 360;
+}
+
+int turn_left(int Grade)
+{
+direct -= Grade;
+direct_handler();
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+return direct;
+}
+
+int turn_right(int Grade)
+{
+direct += Grade;
+direct_handler();
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+return direct;
+}
+
+int turn_behind()
+{
+if(direct<181)
+{
+direct+=180;
+}
+else if(direct>179)
+{
+direct-=180;
+}
+direct_handler();
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+return direct;
+}
+
+void walk_front()
+{
+float rad = direct * PI / 180.0;
+x += sin(rad);
+y += cos(rad);
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+
+}
+
+void walk_behind()
+{
+float rad = direct * PI / 180.0;
+x -= sin(rad);
+y -= cos(rad);
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+
+}
+
+void walk_left()
+{
+float rad = (direct - 90) * PI / 180.0;
+x += sin(rad);
+y += cos(rad);
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+
+}
+
+void walk_right()
+{
+float rad = (direct + 90) * PI / 180.0;
+x += sin(rad);
+y += cos(rad);
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+
+}
+
+int walk_z(int range=0)
+{
+z+=range;
+	s.set_position(get_x(), get_y(), get_z(), 0.0, 1, 0.0, direct, 1.0, 1.0);
+env.set_listener(get_x(), get_y(), get_z()+0.1, direct);
+env.update();
+
+return z;
+}
+

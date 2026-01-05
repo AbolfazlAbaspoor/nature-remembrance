@@ -1,0 +1,31 @@
+class Tile {
+int minx, maxx, miny, maxy, minz, maxz;
+string type;
+
+Tile()
+{
+minx = maxx = miny = maxy = minz = maxz = 0;
+type = "";
+}
+
+Tile(int m_minx, int m_maxx, int m_miny, int m_maxy, int m_minz, int m_maxz, string m_type)
+{
+minx = m_minx;
+maxx = m_maxx;
+miny = m_miny;
+maxy = m_maxy;
+minz = m_minz;
+maxz = m_maxz;
+type = m_type;
+}
+
+bool contains(int x, int y, int z)
+{
+return (x >= minx && x <= maxx && y >= miny && y <= maxy && z >= minz && z <= maxz);
+}
+
+string get_type()
+{
+return type;
+}
+}

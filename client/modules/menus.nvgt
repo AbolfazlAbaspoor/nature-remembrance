@@ -1,0 +1,424 @@
+void def_main_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "main menu!";
+if(!connected)
+{
+my_menu.add_item("Connect.", "connect");
+}
+else if(name.length()>3 and name.length()<32 and password.length()>7 and password.length()<32)
+{
+my_menu.add_item("Start the game as "+ name, "sign in");
+}
+else
+{
+my_menu.add_item("sign in.", "sign in2");
+}
+if(!SCRIPT_COMPILED)
+{
+my_menu.add_item("Developer menu.", "developer");
+}
+my_menu.add_item("Settings.", "settings");
+my_menu.add_item("update (for test).", "update");
+my_menu.add_item("About.", "about");
+my_menu.add_item("Exit.", "exit");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=exit_game;
+}
+
+else if (my_menu.get_selected_item_id()=="connect")
+{
+screen=connect;
+}
+
+else if (my_menu.get_selected_item_id()=="sign in")
+{
+screen=sign_in;
+running_as=true;
+}
+
+else if (my_menu.get_selected_item_id()=="sign in2")
+{
+screen=sign_in;
+running_as=false;
+}
+
+else if (my_menu.get_selected_item_id()=="developer")
+{
+screen=developer_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="settings")
+{
+screen=settings_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="about")
+{
+screen=about;
+}
+
+else if (my_menu.get_selected_item_id()=="update")
+{
+if(!run("updater.exe", "", false, false))
+{
+alert("error!", "failed");
+}
+}
+
+else if (my_menu.get_selected_item_id()=="exit")
+{
+screen=exit_game;
+}
+check_screen();
+}
+
+void def_settings_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "setting menu!";
+my_menu.add_item("connection settings.", "connection");
+my_menu.add_item("audio settings.", "audio");
+my_menu.add_item("Screen reader settings.", "screen");
+//my_menu.add_item("key settings.", "key");
+my_menu.add_item("back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=main_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="connection")
+{
+screen=connection_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="audio")
+{
+screen=audio_menu;
+}
+
+else if (my_menu.get_selected_item_id()== "screen")
+{
+screen=screen_reader_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=main_menu;
+}
+check_screen();
+}
+
+void def_about_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "About!";
+my_menu.add_item("Version: "+ version, "version");
+my_menu.add_item("Developed buy: (abolfazl abaspoor.", "developed");
+my_menu.add_item("Beta testers: (Kiyarash fadaii, amirali amiri and abolfazl saeidifar).", "beta");
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=main_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=main_menu;
+}
+check_screen();
+}
+
+void def_developer_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "developer menu!";
+if(!is_developer)
+{
+my_menu.add_item("disable developer rank on log in time.", "rank");
+}
+else
+{
+my_menu.add_item("enable developer rank on log in time.", "rank");
+}
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=main_menu;
+check_screen();
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=main_menu;
+check_screen();
+}
+
+else if (my_menu.get_selected_item_id()=="rank")
+{
+if(!is_developer)
+{
+is_developer=true;
+}
+else
+{
+is_developer=false;
+}
+}
+check_screen();
+}
+
+void def_connection_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "connection settings!";
+if(!connected)
+{
+my_menu.add_item("Connect.", "connect");
+}
+else
+{
+my_menu.add_item("Sign in.", "sign in");
+my_menu.add_item("Sign up.", "sign up");
+}
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=settings_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=settings_menu;
+running_as=false;
+}
+
+else if (my_menu.get_selected_item_id()=="connect")
+{
+screen=connect;
+}
+
+else if (my_menu.get_selected_item_id()=="sign up")
+{
+screen=sign_up;
+running_as=false;
+}
+
+else if (my_menu.get_selected_item_id()=="sign in")
+{
+screen=sign_in;
+running_as=false;
+}
+check_screen();
+}
+
+void def_audio_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "audio menu!";
+my_menu.add_item("output device: "+ output_devices[sound_output_device], "output");
+my_menu.add_item("input device: "+ input_devices[sound_input_device], "input");
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=settings_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="output")
+{
+screen=output_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="input")
+{
+screen=input_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=settings_menu;
+}
+check_screen();
+}
+
+void def_output_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "selecte a device!";
+for(int i=1; i<output_devices.length(); i++)
+{
+my_menu.add_item(output_devices[i], string(i));
+}
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=audio_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=audio_menu;
+}
+else
+{
+sound_output_device= int(my_menu.get_focused_item())+1;
+speak("output changed to: "+ output_devices[sound_output_device], true);
+screen=audio_menu;
+}
+
+check_screen();
+}
+
+void def_input_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "selecte a device!";
+for(int i=0; i<input_devices.length(); i++)
+{
+my_menu.add_item(input_devices[i], string(i));
+}
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=audio_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=audio_menu;
+}
+
+else
+{
+sound_input_device= int(my_menu.get_focused_item());
+speak("input changed to: "+ input_devices[sound_input_device], true);
+screen=audio_menu;
+}
+check_screen();
+}
+
+void def_screen_reader_menu()
+{
+menu my_menu;
+
+my_menu.click_sound = "audio/menu/move.ogg";
+my_menu.select_sound = "audio/menu/click.ogg";
+my_menu.open_sound = "audio/menu/open.ogg";
+my_menu.close_sound= "audio/menu/close.mp3";
+my_menu.edge_sound   = "audio/menu/edge.ogg";
+
+my_menu.intro_text = "Screen reader settings!";
+if(use_sr== true)
+{
+my_menu.add_item("disable screen reader for read text messages.", "disable");
+}
+else
+{
+my_menu.add_item("enable screen reader for read text messages.", "enable");
+}
+my_menu.add_item("Back.", "back");
+
+int result = my_menu.run();
+
+if (result == -1)
+{
+screen=settings_menu;
+}
+
+else if (my_menu.get_selected_item_id()=="enable")
+{
+use_sr= true;
+}
+
+else if (my_menu.get_selected_item_id()=="disable")
+{
+use_sr= false;
+}
+
+else if (my_menu.get_selected_item_id()=="back")
+{
+screen=settings_menu;
+}
+check_screen();
+}

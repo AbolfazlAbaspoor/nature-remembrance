@@ -1,0 +1,133 @@
+class BufferManager
+{
+dictionary buffers;  // کل بافرها
+array<string> buffer_names;  // ترتیب بافرها
+int current_buffer_index = -1;   // اندیس بافر فعال
+int current_item_index = -1; // اندیس آیتم فعال در بافر
+bool while_item; //هنگام عوض شدن بافر وقتی بیشتر و یا کمتر اگر بود به انتحا و یا اول بافر ها برگردد یا خیر.
+
+
+// ساخت یک بافر جدید
+void add_buffer(const string &in name) {
+if(!buffers.exists(name)) {
+array<string> items;
+buffers.set(name, @items);
+buffer_names.push_back(name);
+if(current_buffer_index == -1) {
+current_buffer_index = 0;
+current_item_index = -1;
+}
+}
+}
+
+// افزودن آیتم به یک بافر
+void add_item(const string &in buffer_name, const string &in item) {
+if(buffers.exists(buffer_name)) {
+array<string>@ items;
+buffers.get(buffer_name, @items);
+items.push_back(item);
+// اگر این بافر فعال باشه و هنوز آیتم انتخاب نشده
+if(buffer_names[current_buffer_index] == buffer_name && current_item_index == -1) {
+current_item_index = 0;
+}
+}
+}
+
+// حرکت به بافر قبلی
+void back_buffer(int step = 1) {
+if(buffer_names.length() == 0) return;
+current_buffer_index -= step;
+if(current_buffer_index < 0) current_buffer_index = 0;
+reset_item_index();
+}
+
+// حرکت به بافر بعدی
+void next_buffer(int step = 1) {
+if(buffer_names.length() == 0) return;
+current_buffer_index += step;
+if(current_buffer_index >= buffer_names.length()) current_buffer_index = buffer_names.length() - 1;
+reset_item_index();
+}
+
+// حرکت به آیتم قبلی در بافر فعال
+void back_item() {
+if(!has_active_items()) return;
+current_item_index--;
+if(current_item_index < 0)
+{
+if(while_item)
+{
+current_item_index = get_items().length() - 1;
+}
+else
+{
+current_item_index = 0;
+}
+}
+}
+
+// حرکت به آیتم بعدی در بافر فعال
+void next_item() {
+if(!has_active_items()) return;
+current_item_index++;
+if(current_item_index >= get_items().length())
+{
+if(while_item)
+{
+current_item_index = 0;
+}
+else
+{
+current_item_index = get_items().length() - 1;
+}
+}
+}
+
+// گرفتن اندیس آیتم فعلی
+int get_index() {
+return current_item_index;
+}
+
+// گرفتن آیتم فعلی
+string get_item() {
+if(!has_active_items()) return "";
+return get_items()[current_item_index];
+}
+
+// گرفتن نام بافر فعال
+string get_buffer() {
+if(current_buffer_index < 0 || current_buffer_index >= buffer_names.length()) return "";
+return buffer_names[current_buffer_index];
+}
+
+// گرفتن کل آیتم‌های بافر فعال
+array<string>@ get_items() {
+string name = get_buffer();
+array<string>@ items;
+buffers.get(name, @items);
+return items;
+}
+
+// ریست کردن اندیس آیتم وقتی بافر عوض میشه
+void reset_item_index() {
+if(get_items().length() > 0) current_item_index = 0;
+else current_item_index = -1;
+}
+
+// بررسی وجود آیتم در بافر فعال
+bool has_active_items() {
+return (current_buffer_index >= 0 && current_item_index >= 0 && current_item_index < get_items().length());
+}
+
+void set_while_item(bool status)
+{
+if(status)
+{
+while_item=true;
+}
+else
+{
+while_item=false;
+}
+}
+}

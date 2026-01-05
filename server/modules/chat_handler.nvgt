@@ -1,0 +1,22 @@
+void def_chat()
+{
+string username;
+// بازسازی کل پیام (برای پشتیبانی از وجود ":" در متن)
+string content = command[1];
+for(uint i = 2; i < command.length(); i++)
+{
+content += ":" + command[i];
+}
+
+if(online_users.exists(string(n_event.peer_id)))
+{
+username= string(online_users[string(n_event.peer_id)]);
+}
+
+else
+{
+return;
+}
+
+n.send_reliable(0, string_aes_encrypt("chat:"+ username+ ":"+ content, encrypt_key), 0);
+}

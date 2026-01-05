@@ -1,0 +1,41 @@
+#include "buffer.nvgt"
+void main() {
+    BufferManager bm;
+
+    // ساخت بافرها
+    bm.add_buffer("all");
+    bm.add_buffer("urls");
+    bm.add_buffer("chats");
+
+    // افزودن آیتم‌ها
+    bm.add_item("all", "salam");
+    bm.add_item("all", "khobi?");
+    bm.add_item("urls", "https://nvgt.gg");
+    bm.add_item("chats", "msg1");
+    bm.add_item("chats", "msg2");
+
+    // نمایش اولیه
+    alert("Buffer", "Current buffer: " + bm.get_buffer() + "\nItem: " + bm.get_item());
+
+    // حلقه‌ی تست برای حرکت با کلیدها
+    show_window("test");
+    while(!key_pressed(KEY_ESCAPE)) {
+        if(key_pressed(KEY_RIGHT)) {
+            bm.next_buffer();
+            alert("Buffer", "Switched to: " + bm.get_buffer());
+        }
+        if(key_pressed(KEY_LEFT)) {
+bm.back_buffer();
+alert("Buffer", "Switched to: " + bm.get_buffer());
+        }
+        if(key_pressed(KEY_DOWN)) {
+            bm.next_item();
+            alert("Item", "Item: " + bm.get_item());
+        }
+        if(key_pressed(KEY_UP)) {
+            bm.back_item();
+            alert("Item", "Item: " + bm.get_item());
+        }
+        wait(50);
+    }
+}

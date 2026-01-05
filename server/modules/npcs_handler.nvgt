@@ -1,0 +1,9 @@
+class being
+{
+string name;
+string map;
+vector position;
+int health;
+}
+
+being player(string p_name, string p_map, vector p_position, int health);

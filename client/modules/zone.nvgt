@@ -1,0 +1,32 @@
+class Zone {
+    int minx, maxx, miny, maxy, minz, maxz;
+    string name;
+
+    // سازنده‌ی پیش‌فرض
+    Zone() {
+        minx = maxx = miny = maxy = minz = maxz = 0;
+        name = "";
+    }
+
+    // سازنده‌ی پارامتردار
+    Zone(int minx_, int maxx_, int miny_, int maxy_, int minz_, int maxz_, string name_) {
+        minx = minx_;
+        maxx = maxx_;
+        miny = miny_;
+        maxy = maxy_;
+        minz = minz_;
+        maxz = maxz_;
+        name = name_;
+    }
+
+    // بررسی اینکه مختصات داخل این zone هست یا نه
+    bool contains(int x, int y, int z) {
+        return (x >= minx && x <= maxx &&
+                y >= miny && y <= maxy &&
+                z >= minz && z <= maxz);
+    }
+
+    string get_name() {
+        return name;
+    }
+}

@@ -1,0 +1,13 @@
+class backpack
+{
+buffer bag;
+bag.add_buffer("backpack");
+bag.set_while_item(true);
+bool opened;
+
+
+void add_item(string item_name)
+{
+bag.add_item("backpack", item_name);
+}
+}

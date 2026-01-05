@@ -1,0 +1,61 @@
+settings g_settings;
+
+void def_save_data() {
+g_settings.set_encryption(encrypt_key);
+g_settings.setup("data", "settings", true, "nvgt");
+
+g_settings.write_string("name", name);
+g_settings.write_string("password", password);
+g_settings.write_number("sound_output_device", sound_output_device);
+g_settings.write_number("sound_input_device", sound_input_device);
+g_settings.write_number("volume", game_volume);
+g_settings.write_string("use_sr", use_sr);
+
+g_settings.dump();
+}
+
+void def_load_data() {
+g_settings.set_encryption(encrypt_key);
+g_settings.setup("data", "settings", true, "nvgt");
+
+name= g_settings.read_string("name", "");
+password= g_settings.read_string("password", "");
+sound_output_device= g_settings.read_number("sound_output_device", 1);
+sound_input_device  = g_settings.read_number("sound_input_device", 0);
+game_volume = g_settings.read_number("volume", 0);
+string use_sr_str= g_settings.read_string("use_sr", "");
+
+if(use_sr_str=="true")
+{
+use_sr=true;
+}
+
+else if(use_sr_str=="false")
+{
+use_sr=false;
+}
+
+else if(!system_is_windows or use_sr_str=="")
+{
+use_sr= false;
+}
+
+
+
+if(sound_input_device<0)
+{
+sound_input_device=0;
+}
+if(sound_output_device<0)
+{
+sound_output_device=1;
+}
+if(sound_input_device>input_devices.length()-1)
+{
+sound_input_device=0;
+}
+if(sound_output_device>output_devices.length()-1)
+{
+sound_output_device=1;
+}
+}

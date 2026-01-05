@@ -1,0 +1,34 @@
+
+---
+
+**Title:**
+Android: input boxes do not open or close soft keyboard  
+
+**Description:**  
+On Android, focusing an `audio_form` input box does not open the soft keyboard. On Windows this works because of the hardware keyboard, but on Android the IME must be explicitly shown/hidden.  
+
+**Steps to reproduce:**  
+1. Create a form with `create_window` and `create_input_box`.  
+2. Call `focus(input_id)`.  
+3. Run on Android without a hardware keyboard.  
+4. Observe: NVGT announces “blank” but the soft keyboard never appears.  
+
+**Expected behavior:**  
+- When an input box (or `ct_keyboard_area`) gains focus, Android should automatically open the soft keyboard.  
+- When focus is lost or the form is closed/reset, the soft keyboard should hide.  
+
+**Proposed fix:**  
+In the Android platform layer, when a `ct_input` or `ct_keyboard_area` control gains focus, call:  
+```java
+InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+```  
+When focus is lost or the form closes, call:  
+```java
+imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+```  
+
+**Why this matters:**  
+Without this, Android users cannot type into NVGT input boxes unless they attach a hardware keyboard. Adding IME show/hide handling will make forms usable on Android.  
+
+---
